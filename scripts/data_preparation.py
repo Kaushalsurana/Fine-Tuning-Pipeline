@@ -3,9 +3,7 @@ import json
 import random
 from datasets import Dataset, DatasetDict
 from transformers import AutoTokenizer
-import os
 from dotenv import load_dotenv
-from transformers import AutoTokenizer
 
 # Load .env file
 load_dotenv()
@@ -58,19 +56,17 @@ def prepare_dataset(texts):
         "test": Dataset.from_list(all_data[split2:])
     })
     
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-    
     return dataset.map(lambda x: tokenize_function(x, tokenizer), batched=True)
 
 if __name__ == "__main__":
-    from preprocessing import load_documents
-    
-    # Load preprocessed documents
-    path = "/workspaces/Fine-Tuning-Pipeline/Data/documentation.pdf"
-    documents = load_documents(path)
-    
+    # ✅ Load preprocessed text instead of extracting again
+    with open("./data/preprocessed_text.json", "r", encoding="utf-8") as f:
+        documents = json.load(f)
+
     dataset = prepare_dataset(documents)
     
-    # Save dataset to disk
+    # ✅ Save dataset to disk
+    os.makedirs("./data", exist_ok=True)
     dataset.save_to_disk("./data/processed_dataset")
-    print("Dataset saved successfully!")
+    
+    print("✅ Dataset saved successfully!")
