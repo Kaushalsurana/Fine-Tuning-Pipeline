@@ -1,0 +1,11 @@
+torch
+transformers
+peft
+datasets
+accelerate
+sentencepiece
+pdfplumber
+PyPDF2
+markdown2
+fastapi
+uvicorn
